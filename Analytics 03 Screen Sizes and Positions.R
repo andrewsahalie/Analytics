@@ -86,62 +86,62 @@ Analytics$ToYPct <- ifelse(Analytics$Moved=="Yes Moved", Analytics$MovedToY / An
 # pair/listwise because we don’t want to see incomplete location information (might be confusing).
 # Although the values of 0 and 1 for "...pct" are included, those values were not found in Y1RFS data.
 Analytics$FromXPct[
-	Analytics$FromXPct >= 1 |
-	Analytics$FromXPct <= 0 |
+	Analytics$FromXPct > 1 |
+	Analytics$FromXPct < 0 |
 	is.na(Analytics$FromXPct) |
-	Analytics$FromYPct >= 1 |
-	Analytics$FromYPct <= 0 |
+	Analytics$FromYPct > 1 |
+	Analytics$FromYPct < 0 |
 	is.na(Analytics$FromYPct) |
-	Analytics$ToXPct >= 1 |
-	Analytics$ToXPct <= 0 |
+	Analytics$ToXPct > 1 |
+	Analytics$ToXPct < 0 |
 	is.na(Analytics$ToXPct) |
-	Analytics$ToYPct >= 1 |
-	Analytics$ToYPct <= 0 |
+	Analytics$ToYPct > 1 |
+	Analytics$ToYPct < 0 |
 	is.na(Analytics$ToYPct)
 ] <- NA
 
 Analytics$FromYPct[
-	Analytics$FromXPct >= 1 |
-	Analytics$FromXPct <= 0 |
+	Analytics$FromXPct > 1 |
+	Analytics$FromXPct < 0 |
 	is.na(Analytics$FromXPct) |
-	Analytics$FromYPct >= 1 |
-	Analytics$FromYPct <= 0 |
+	Analytics$FromYPct > 1 |
+	Analytics$FromYPct < 0 |
 	is.na(Analytics$FromYPct) |
-	Analytics$ToXPct >= 1 |
-	Analytics$ToXPct <= 0 |
+	Analytics$ToXPct > 1 |
+	Analytics$ToXPct < 0 |
 	is.na(Analytics$ToXPct) |
-	Analytics$ToYPct >= 1 |
-	Analytics$ToYPct <= 0 |
+	Analytics$ToYPct > 1 |
+	Analytics$ToYPct < 0 |
 	is.na(Analytics$ToYPct)
 ] <- NA
 
 Analytics$ToXPct[
-	Analytics$FromXPct >= 1 |
-	Analytics$FromXPct <= 0 |
+	Analytics$FromXPct > 1 |
+	Analytics$FromXPct < 0 |
 	is.na(Analytics$FromXPct) |
-	Analytics$FromYPct >= 1 |
-	Analytics$FromYPct <= 0 |
+	Analytics$FromYPct > 1 |
+	Analytics$FromYPct < 0 |
 	is.na(Analytics$FromYPct) |
-	Analytics$ToXPct >= 1 |
-	Analytics$ToXPct <= 0 |
+	Analytics$ToXPct > 1 |
+	Analytics$ToXPct < 0 |
 	is.na(Analytics$ToXPct) |
-	Analytics$ToYPct >= 1 |
-	Analytics$ToYPct <= 0 |
+	Analytics$ToYPct > 1 |
+	Analytics$ToYPct < 0 |
 	is.na(Analytics$ToYPct)
 ] <- NA
 
 Analytics$ToYPct[
-	Analytics$FromXPct >= 1 |
-	Analytics$FromXPct <= 0 |
+	Analytics$FromXPct > 1 |
+	Analytics$FromXPct < 0 |
 	is.na(Analytics$FromXPct) |
-	Analytics$FromYPct >= 1 |
-	Analytics$FromYPct <= 0 |
+	Analytics$FromYPct > 1 |
+	Analytics$FromYPct < 0 |
 	is.na(Analytics$FromYPct) |
-	Analytics$ToXPct >= 1 |
-	Analytics$ToXPct <= 0 |
+	Analytics$ToXPct > 1 |
+	Analytics$ToXPct < 0 |
 	is.na(Analytics$ToXPct) |
-	Analytics$ToYPct >= 1 |
-	Analytics$ToYPct <= 0 |
+	Analytics$ToYPct > 1 |
+	Analytics$ToYPct < 0 |
 	is.na(Analytics$ToYPct)
 ] <- NA
 
