@@ -1,4 +1,4 @@
-#Analytics Data
+# Analytics Data
 # Actions!
 
 # Number of actions per lesson
@@ -6,10 +6,11 @@
 # Populating an "Actions" table that will be used throughout this file.
 require(dplyr)
 Actions <- Analytics
-Actions <-  subset(Analytics, select=-c(DateTest))
+Actions <- subset(Analytics, select = -c(DateTest))
 
 
-# The following objects/tables make groups of actions that will be useful in reporting actions by type and that will also help remove redundant actions:
+# The following objects/tables make groups of actions that will be useful in reporting actions by type and that will also help
+# remove redundant actions:
 
 AddedMoleculesOrProteins = c(
 	"Added-ATP",
@@ -152,7 +153,7 @@ DraggedMoleculeOrProtein = c(
 	"Dragged-TTX")
 Actions$ActionLabel[Actions$ActionLabel %in% DraggedMoleculeOrProtein] <- "Dragged Molecule or Protein"
 
-Actions$ActionLabel <- ifelse(Actions$ActionLabel=="Dragged-Schwann cell", "Dragged Schwann Cell", Actions$ActionLabel)
+Actions$ActionLabel <- ifelse(Actions$ActionLabel == "Dragged-Schwann cell", "Dragged Schwann Cell", Actions$ActionLabel)
 
 DraggedUndraggableThing = c(
 	"Dragged-EquationsMenuButton",
@@ -342,7 +343,11 @@ UnsuccessfullyDroppedProteinOrMolecule = c(
 	"Not dropped - wrong zone-tried to drop TTX in MembraneZone")
 Actions$ActionLabel[Actions$ActionLabel %in% UnsuccessfullyDroppedProteinOrMolecule] <- "Unsuccessfully Dropped Protein or Molecule"
 
-Actions$ActionLabel <- ifelse(Actions$ActionLabel=="Not dropped - no zone-tried to drop Schwann cell in no zone", "Unsuccessfully Dropped Schwann Cell", Actions$ActionLabel)
+Actions$ActionLabel <- ifelse(
+	Actions$ActionLabel==
+	"Not dropped - no zone-tried to drop Schwann cell in no zone",
+	"Unsuccessfully Dropped Schwann Cell",
+	Actions$ActionLabel)
 
 remove(UsedConcentrationSlider)
 UsedConcentrationSlider = c(
@@ -365,8 +370,8 @@ ZoomedPannedOrResized = c(
 Actions$ActionLabel[Actions$ActionLabel %in% ZoomedPannedOrResized] <- "Zoomed, Panned, or Resized"
 
 # Simplifying all of these rolled-on, rolled-off fields.
-Actions$ActionLabel[grep("Turning on-",Actions$ActionLabel)] <- "Turning on"
-Actions$ActionLabel[grep("Turning off-",Actions$ActionLabel)] <- "Turning off"
+Actions$ActionLabel[grep("Turning on-", Actions$ActionLabel)] <- "Turning on"
+Actions$ActionLabel[grep("Turning off-", Actions$ActionLabel)] <- "Turning off"
 
 
 
@@ -393,9 +398,9 @@ ActionsSummary <- ddply(Actions, c("UserIDMaybe", "Lesson"), summarise, N = leng
 # This part produces a start ratio (ratio of start actions to other actions) that can help identify problems with the app that result in more
 # “start” actions than other actions.
 require(plyr)
-ActionsStartRatio <- ddply(Actions, c("Lesson"), summarise, N = length(ActionLabel), NStart = length(ActionFix[ActionFix=="Start"]))
+ActionsStartRatio <- ddply(Actions, c("Lesson"), summarise, N = length(ActionLabel), NStart = length(ActionFix[ActionFix == "Start"]))
 
-ActionsStartRatio$StartRatio <- ifelse(ActionsStartRatio$NStart >= 1, ActionsStartRatio$N / ActionsStartRatio$NStart,"NA")
+ActionsStartRatio$StartRatio <- ifelse(ActionsStartRatio$NStart >= 1, ActionsStartRatio$N / ActionsStartRatio$NStart, "NA")
 
 
 # This part produces a ActionsLessonSummary table that can be used to make graphics about what actions were done in what numbers by lesson.
@@ -445,17 +450,30 @@ Actions$Instance <- paste(Actions$UserIDMaybe, Actions$Lesson, Actions$Environme
 # UserLessonInstance, it’s not there in another.
 Actions$UserLessonInstance <- paste(Actions$UserIDMaybe, Actions$Lesson, sep = "-")
 
-#Sorting! (so that each Instance’s records are in a group with older records on the bottom)
+# Sorting! (so that each Instance’s records are in a group with older records on the bottom)
 Actions <- Actions[with(Actions, order(Instance, Date)), ]
 
 # New RawActionLabel to help identify criteria for potential scientific exploration
 Actions$RawActionLabel <- paste(Actions$ActionFix, Actions$LabelFix, sep = "-")
-#unique(Actions$RawActionLabel)
+# unique(Actions$RawActionLabel)
 
-# New UILabel (volt graphs are different from other meters in the way they are recorded as having been moved, hence using different raw variables and criteria) to help identify volt graph criterion for potential scientific exploration
+# New UILabel (volt graphs are different from other meters in the way they are recorded as having been moved,
+# hence using different raw variables and criteria) to help identify volt graph criterion for potential scientific exploration
 Actions$RawUILabel <- 0
-Actions$RawUILabel[Actions$UIThing == "UIClose" & Actions$ActionFix == "Voltage graph"] <- paste(Actions$UIThing[Actions$UIThing == "UIClose" & Actions$ActionFix == "Voltage graph"], Actions$ActionFix[Actions$UIThing == "UIClose" & Actions$ActionFix == "Voltage graph"], sep = "-")
-#table(Actions$RawUILabel)
+Actions$RawUILabel[
+	Actions$UIThing == "UIClose" &
+	Actions$ActionFix == "Voltage graph"
+] <-
+paste(Actions$UIThing[
+	Actions$UIThing == "UIClose" &
+	Actions$ActionFix == "Voltage graph"
+],
+Actions$ActionFix[
+	Actions$UIThing == "UIClose" &
+	Actions$ActionFix == "Voltage graph"
+], sep = "-")
+
+# table(Actions$RawUILabel)
 
 Actions$NormalMeterAdded <- 0
 Actions$NormalVoltGraphAdded <- 0
@@ -477,7 +495,8 @@ AddedMeters = c(
 	"Dropped - no zone needed-successfully dropped 1 Nernst equations")
 Actions$NormalMeterAdded[Actions$RawActionLabel %in% AddedMeters] <- 1
 
-# Above had previously included "Added-Goldman equation", "Added-Ion concentrations", "Added-Nernst equation", "Added-Voltage meter", but those are duplicates)
+# Above had previously included "Added-Goldman equation", "Added-Ion concentrations", "Added-Nernst equation", "Added-Voltage meter",
+# but those are duplicates)
 
 remove(AddedVoltGraph)
 AddedVoltGraph = c(
@@ -486,8 +505,8 @@ Actions$NormalVoltGraphAdded[Actions$RawActionLabel %in% AddedVoltGraph] <- 1
 
 
 # Check these tables to verify that all of the patterns looked for are correct:
-#table(Actions$RawActionLabel[Actions$NormalMeterAdded == 1])
-#table(Actions$RawActionLabel[Actions$NormalVoltGraphAdded == 1])
+# table(Actions$RawActionLabel[Actions$NormalMeterAdded == 1])
+# table(Actions$RawActionLabel[Actions$NormalVoltGraphAdded == 1])
 
 remove(RemovedMeters)
 RemovedMeters = c(
@@ -503,32 +522,32 @@ RemovedVoltGraph = c(
 Actions$NormalVoltGraphAdded[Actions$RawUILabel %in% RemovedVoltGraph] <- -1
 
 # Check this table to verify that all of the patterns looked for are correct:
-	#table(Actions$RawActionLabel[Actions$NormalMeterAdded == -1])
-	#table(Actions$RawUILabel[Actions$NormalVoltGraphAdded == -1])
+	# table(Actions$RawActionLabel[Actions$NormalMeterAdded == -1])
+	# table(Actions$RawUILabel[Actions$NormalVoltGraphAdded == -1])
 
 # This table should show distinct categorization (no duplication between coding schemes)
-	#table(Actions$RawUILabel[Actions$NormalVoltGraphAdded == -1 | Actions$NormalMeterAdded == -1],
+	# table(Actions$RawUILabel[Actions$NormalVoltGraphAdded == -1 | Actions$NormalMeterAdded == -1],
 	# Actions$RawActionLabel[Actions$NormalVoltGraphAdded == -1 | Actions$NormalMeterAdded == -1])
 
 
 # This is where the NormalMeterPresent values are created. Uses previous row stuff.
 Actions <- within(Actions, {NormalMeterPresent <- ave(NormalMeterAdded, Instance, FUN = cumsum) })
 # Fixing instances where a negative number of meters were present:
-Actions$NormalMeterPresent[Actions$NormalMeterPresent<0] <- 0
+Actions$NormalMeterPresent[Actions$NormalMeterPresent < 0] <- 0
 Actions$NormalMeterPresent[is.na(Actions$NormalMeterPresent)] <- 0
 
 # This is where the NormalVoltGraphPresent values are created. Uses previous row stuff.
 Actions <- within(Actions, {NormalVoltGraphPresent <- ave(NormalVoltGraphAdded, UserLessonInstance, FUN = cumsum) })
 # Fixing instances where a negative number of meters were present:
-Actions$NormalVoltGraphPresent[Actions$NormalVoltGraphPresent<0] <- 0
+Actions$NormalVoltGraphPresent[Actions$NormalVoltGraphPresent < 0] <- 0
 Actions$NormalVoltGraphPresent[is.na(Actions$NormalVoltGraphPresent)] <- 0
 
 
 # Fixing instances where more than the 10 (UPDATE!) possible number of (non-volt graph) meters were present (I don’t know why, but one user had
 # 12 meters present at one point - may have been because volt graph removal wasn’t picked up):
-Actions$NormalMeterPresent[Actions$NormalMeterPresent>10] <- 10
+Actions$NormalMeterPresent[Actions$NormalMeterPresent > 10] <- 10
 
-#summary(Actions$NormalMeterPresent)
+# summary(Actions$NormalMeterPresent)
 
 
 
@@ -599,16 +618,16 @@ EvidenceOfSecretMeters = c(
 	"Turning on-OuterConcentration",
 	"Turning on-TotalPermeability",
 	"Turning on-Voltage")
-Actions$NewEvidenceOfMeter[(Actions$RawActionLabel %in% EvidenceOfSecretMeters) & Actions$NormalMeterPresent==0] <- 1
+Actions$NewEvidenceOfMeter[(Actions$RawActionLabel %in% EvidenceOfSecretMeters) & Actions$NormalMeterPresent == 0] <- 1
 
 remove(EvidenceOfSecretVoltGraphs)
 EvidenceOfSecretVoltGraphs = c(
 	"Clicked-Voltage graph",
 	"FromXToY-Voltage graph",
 	"Clicked Voltage Line")
-Actions$NewEvidenceOfVoltGraph[(Actions$RawActionLabel %in% EvidenceOfSecretVoltGraphs) & Actions$NormalVoltGraphPresent==0] <- 1
+Actions$NewEvidenceOfVoltGraph[(Actions$RawActionLabel %in% EvidenceOfSecretVoltGraphs) & Actions$NormalVoltGraphPresent == 0] <- 1
 
-Actions$NewEvidenceOfVoltGraph[(Actions$LabelFix %in% EvidenceOfSecretVoltGraphs) & Actions$NormalVoltGraphPresent==0] <- 1
+Actions$NewEvidenceOfVoltGraph[(Actions$LabelFix %in% EvidenceOfSecretVoltGraphs) & Actions$NormalVoltGraphPresent == 0] <- 1
 
 
 
@@ -631,10 +650,11 @@ Actions$SecretVoltGraphDetected <- as.integer(Actions$SecretVoltGraphDetected)
 Actions$SumOfSecretMeterStillPresent <- 0
 Actions$SumOfSecretVoltGraphStillPresent <- 0
 # This fills down with values.
-Actions$SumOfSecretMeterStillPresent <-unlist(lapply(split(Actions$SecretMeterDetected,Actions$Instance),function(x) na.locf(x,na.rm=FALSE)))
+Actions$SumOfSecretMeterStillPresent <- unlist(lapply(split(Actions$SecretMeterDetected,Actions$Instance), function(x) na.locf(x, na.rm = FALSE)))
 Actions$SumOfSecretMeterStillPresent[is.na(Actions$SumOfSecretMeterStillPresent)] <- 0
 
-Actions$SumOfSecretVoltGraphStillPresent <-unlist(lapply(split(Actions$SecretVoltGraphDetected,Actions$UserLessonInstance),function(x) na.locf(x,na.rm=FALSE)))
+Actions$SumOfSecretVoltGraphStillPresent <-
+unlist(lapply(split(Actions$SecretVoltGraphDetected,Actions$UserLessonInstance), function(x) na.locf(x, na.rm = FALSE)))
 Actions$SumOfSecretVoltGraphStillPresent[is.na(Actions$SumOfSecretVoltGraphStillPresent)] <- 0
 
 
@@ -645,8 +665,8 @@ Actions <- within(Actions, {SumOfSecretMeterStillPresent <- ave(SumOfSecretMeter
 Actions <- within(Actions, {SumOfSecretVoltGraphStillPresent <- ave(SumOfSecretVoltGraphStillPresent, UserLessonInstance, FUN = cumsum) })
 
 # This counts the first occurrence during an Instance where a meter was detected when it was not explicitly added.
-Actions$MetersAdded2[Actions$NormalMeterPresent==0 & Actions$SumOfSecretMeterStillPresent == 1] <- 1
-Actions$VoltGraphsAdded2[Actions$NormalVoltGraphPresent==0 & Actions$SumOfSecretVoltGraphStillPresent == 1] <- 1
+Actions$MetersAdded2[Actions$NormalMeterPresent == 0 & Actions$SumOfSecretMeterStillPresent == 1] <- 1
+Actions$VoltGraphsAdded2[Actions$NormalVoltGraphPresent == 0 & Actions$SumOfSecretVoltGraphStillPresent == 1] <- 1
 
 # Now MetersAdded2 = 1 whenever we should be counting a secret meter or a secret volt graph.
 # Now VoltGraphsAdded2 = 1 whenever we should be counting a secret volt graph.
@@ -656,18 +676,18 @@ Actions$MeterReallyPresent <- pmax(Actions$MetersAdded2, Actions$NormalMeterAdde
 Actions$VoltGraphReallyPresent <- pmax(Actions$VoltGraphsAdded2, Actions$NormalVoltGraphAdded, na.rm = TRUE)
 
 # This is where the NormalMeterPresent values are created. Uses previous row stuff.
-Actions <- within(Actions, {AnyMeterPresent <- ave(MeterReallyPresent, Instance, FUN = cumsum) })
-Actions <- within(Actions, {AnyVoltGraphPresent <- ave(VoltGraphReallyPresent, UserLessonInstance, FUN = cumsum) })
+Actions <- within(Actions, {AnyMeterPresent <- ave(MeterReallyPresent, Instance, FUN = cumsum)})
+Actions <- within(Actions, {AnyVoltGraphPresent <- ave(VoltGraphReallyPresent, UserLessonInstance, FUN = cumsum)})
 
-Actions$AnyMeterPresent[Actions$AnyMeterPresent<0] <- 0
-Actions$AnyVoltGraphPresent[Actions$AnyVoltGraphPresent<0] <- 0
+Actions$AnyMeterPresent[Actions$AnyMeterPresent < 0] <- 0
+Actions$AnyVoltGraphPresent[Actions$AnyVoltGraphPresent < 0] <- 0
 
 # Fixing instances where more than the 10 (UPDATE!)  possible number of meters were present (I don’t know why, but one user had 14 meters present at
 # one point):
-Actions$AnyMeterPresent[Actions$AnyMeterPresent>10] <- 10
+Actions$AnyMeterPresent[Actions$AnyMeterPresent > 10] <- 10
 
 # Fixing instances where more than the 1 (UPDATE!)  possible number of volt graphs were present (not a problem):
-Actions$AnyVoltGraphPresent[Actions$AnyVoltGraphPresent>1] <- 1
+Actions$AnyVoltGraphPresent[Actions$AnyVoltGraphPresent > 1] <- 1
 #Actions$NormalVoltGraphPresent[Actions$NormalVoltGraphPresent>1] <- 1
 
 # So normal meters have been counted in their own way and volt graphs were counted in another way. This function simply adds the two together for
@@ -676,16 +696,16 @@ Actions$AnyVoltGraphPresent[Actions$AnyVoltGraphPresent>1] <- 1
 Actions$AnyMeterPresent2[Actions$SumOfSecretVoltGraphStillPresent <= 1] <- Actions$NormalVoltGraphPresent[Actions$SumOfSecretVoltGraphStillPresent <= 1] + Actions$AnyMeterPresent[Actions$SumOfSecretVoltGraphStillPresent <= 1]
 
 
-#Actions$AnyMeterPresent2 <- Actions$AnyMeterPresent + Actions$AnyVoltGraphPresent
+# Actions$AnyMeterPresent2 <- Actions$AnyMeterPresent + Actions$AnyVoltGraphPresent
 Actions$AnyMeterPresent2 <- pmax(Actions$AnyMeterPresent2, Actions$SecretVoltGraphDetected, na.rm = TRUE)
 
 
 # So Normal meters have been counted in their own way and volt graphs were counted in another way. This function simply adds the two together for
 # each row (doesn’t need anything additional built in about where each are cleared).
-	#Actions$AnyMeterPresent2 <- Actions$NormalVoltGraphPresent + Actions$AnyMeterPresent
 
+# Actions$AnyMeterPresent2 <- Actions$NormalVoltGraphPresent + Actions$AnyMeterPresent
 
-#8987, 4087
+# 8987, 4087
 
 # Does it work?
 	#table(Actions$NormalMeterPresent,Actions$AnyMeterPresent)
@@ -699,7 +719,8 @@ Actions$AnyMeterPresent2 <- pmax(Actions$AnyMeterPresent2, Actions$SecretVoltGra
 # Scientific exploration requires having a meter present while something is changed. This second part is seeing if anything was changed.
 
 
-# Identifying Action-Label combinations that indicate changing the environment in a way that would potentially change what is seen on the accepted meters.
+# Identifying Action-Label combinations that indicate changing the environment in a way that would potentially change what is seen
+# on the accepted meters.
 remove(ChangedVariables)
 ChangedVariables = c(
 	"Dropped - correct zone-successfully dropped 1 ACh receptors in PostMembraneZone",
@@ -765,7 +786,7 @@ Note
 
 
 #Cleaning up variables that aren’t needed now:
-Actions <-  subset(Actions, select=-c(
+Actions <-  subset(Actions, select = -c(
 	RawUILabel,
 	NormalMeterAdded,
 	NormalVoltGraphAdded,
@@ -805,10 +826,15 @@ ScientificExperimentationByLecture <- ddply(Actions, c("Lesson"), summarise, N =
 # Producing info for filtering in other analyses...
 ActionsFilters <- ddply(Actions, c("UserIDMaybe", "Lesson", "Environment"), summarise, Actions = length(UserIDMaybe))
 ActionsFilters$UserLessonEnvironment <- paste(ActionsFilters$UserIDMaybe, ActionsFilters$Lesson, ActionsFilters$Environment, sep = "-")
-#Actions$UserLessonEnvironment <- paste(Actions$UserIDMaybe, Actions$Lesson, Actions$Environment, sep = "-")
+# Actions$UserLessonEnvironment <- paste(Actions$UserIDMaybe, Actions$Lesson, Actions$Environment, sep = "-")
 
 
-
+# Diagnostics/summary
+# table(Actions$AnyMeterPresent2)
+# table(Actions$ChangedVariables)
+# table(Actions$AnyMeterPresent2, Actions$ChangedVariables)
+# table(Actions$PotentialExperimentation)
+# table(Actions$UserIDMaybe, Actions$PotentialExperimentation)
 
 
 
