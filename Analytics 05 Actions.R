@@ -1,4 +1,5 @@
-# Analytics Data
+# Analytics Data: A data manual exists for these data. See Andrew.
+
 # Actions!
 
 # Number of actions per lesson
