@@ -1,4 +1,4 @@
-# Analytics Data
+# Analytics Data: A data manual exists for these data. See Andrew.
 
 require(plyr)
 require(dplyr)
@@ -87,7 +87,7 @@ MinutesUserLessonBinsOOC <- ddply(MinutesUserLessonSummary[MinutesUserLessonSumm
 
 
 # Use this to select only records that happen after a specific time:
-# MinutesEnvironmentAfter <- unique(MinutesEnvironment[MinutesEnvironment$Minute > "2016-02-16 11:59", ])
+# MinutesEnvironmentAfter <- unique(MinutesEnvironment[MinutesEnvironment$Minute>"2016-02-16 11:59",])
 # Use this to test data:
 # Test <- unique(MinutesEnvironment[MinutesEnvironment$UserIDMaybe == "27", ])
 
