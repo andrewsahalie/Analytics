@@ -1,4 +1,4 @@
-# Analytics Data
+# Analytics Data: A data manual exists for these data. See Andrew.
 
 # Analysis of screen positions to be passed to Tableau
 ##### This code requires derived fields that are created in "Analytics 02 Cleaning."
