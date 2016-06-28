@@ -1,4 +1,4 @@
-# Analytics Data
+# Analytics Data: A data manual exists for these data. See Andrew.
 
 #### First user selection criterion: If there’s a name in V2 (e.g., “Tom”), I want the record gone. (We’re interested in students
 # only - not Dynamoidians or instructors for this part.) This part makes a temporary variable, replaces all single- and multi-digit
@@ -47,7 +47,7 @@ colnames(Analytics) <- c(
 	"IPAddress",
 	"TempNumberIDs",
 	"TempDateCheck")
-#Removing the temporary variables
+#Removing the temporary variables that were created above
 Analytics <-  subset(Analytics, select = -c(TempNumberIDs,TempDateCheck))
 
 # Making sure we didn’t bring any error rows or other data that don’t have an associated Lesson (but out-of-class records are okay):
